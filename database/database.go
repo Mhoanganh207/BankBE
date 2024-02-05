@@ -12,10 +12,9 @@ func InitDB() *gorm.DB {
 	if err != nil {
 		panic("Connect failed")
 	}
-	Migration(db)
 	return db
 }
 
 func Migration(db *gorm.DB) {
-	db.AutoMigrate(&models.Country{}, &models.User{}, &models.Account{}, &models.Entry{}, &models.Transfer{})
+	db.AutoMigrate(&models.Country{}, &models.User{}, &models.Account{}, &models.Entry{}, &models.Transfer{}, &models.Session{})
 }

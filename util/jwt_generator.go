@@ -22,7 +22,7 @@ func NewGeneratorToken(secretKey string) Generator {
 	return TokenGenerator{secretKey}
 }
 
-func (g TokenGenerator) GenerateToken(username string, duration time.Duration) (string, error) {
+func (g TokenGenerator) GenerateToken(username string, duration time.Duration) (string, *jwt.RegisteredClaims, error) {
 	claims := jwt.RegisteredClaims{
 		Subject:   username,
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
@@ -32,9 +32,9 @@ func (g TokenGenerator) GenerateToken(username string, duration time.Duration) (
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := jwtToken.SignedString([]byte(g.SecretKey))
 	if err != nil {
-		return "", err
+		return "", &claims, err
 	}
-	return token, nil
+	return token, &claims, nil
 }
 
 func (g TokenGenerator) ValidateToken(jwtToken string) (*jwt.MapClaims, error) {

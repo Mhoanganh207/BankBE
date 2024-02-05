@@ -13,5 +13,6 @@ func (server *Server) addRouter() {
 	routes.addAccountsRoute(server)
 	routes.addTransfersRoute(server)
 	routes.addUserRoute(server)
+	routes.addTokenRoute(server)
 	server.router = routes.router
 }

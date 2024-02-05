@@ -1,15 +1,15 @@
 package util
 
 import (
-	"fmt"
 	"os"
 	"time"
 )
 
 type Config struct {
-	Port      string
-	SecretKey string
-	Duration  time.Duration
+	Port            string
+	SecretKey       string
+	Duration        time.Duration
+	RefreshDuration time.Duration
 }
 
 func LoadConfig() Config {
@@ -17,13 +17,11 @@ func LoadConfig() Config {
 	if err != nil {
 		panic("Parse duration failed")
 	}
-	fmt.Println("Duration: ", duration)
-	fmt.Println("Port: ", os.Getenv("PORT"))
-	fmt.Println("SecretKey: ", os.Getenv("SECRET_KEY"))
 	return Config{
-		Port:      os.Getenv("PORT"),
-		SecretKey: os.Getenv("SECRET_KEY"),
-		Duration:  duration,
+		Port:            os.Getenv("PORT"),
+		SecretKey:       os.Getenv("SECRET_KEY"),
+		Duration:        duration,
+		RefreshDuration: time.Hour * 24 * 7,
 	}
 
 }

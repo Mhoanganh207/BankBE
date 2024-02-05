@@ -7,7 +7,7 @@ import (
 )
 
 type Generator interface {
-	GenerateToken(username string, duration time.Duration) (string, error)
+	GenerateToken(username string, duration time.Duration) (string, *jwt.RegisteredClaims, error)
 
 	ValidateToken(token string) (*jwt.MapClaims, error)
 
