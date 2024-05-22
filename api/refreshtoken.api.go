@@ -35,26 +35,28 @@ func (s *Server) refreshToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
+
 	payload, err := refreshPayload.GetSubject()
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	SessionID := s.tokenService.GetSubject(payload)
-	session, err := database.GetSession(uuid.MustParse(SessionID), s.db)
+
+	session, err := database.GetSession(uuid.MustParse(s.tokenService.GetSubject(payload)), s.db)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
 	accessToken, _, err := s.tokenService.GenerateToken(session.Username, s.config.Duration)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	expiresAt := time.Now().Add(s.config.Duration)
 	ctx.JSON(http.StatusOK, RefreshTokenResponse{
 		AccessToken:          accessToken,
-		AccessTokenExpiresAt: time.Now().Add(s.config.Duration),
+		AccessTokenExpiresAt: expiresAt,
 	})
-
 }
